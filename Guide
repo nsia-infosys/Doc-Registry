@@ -27,3 +27,5 @@ php artisan make:auth
 
 References:
 - https://www.tutorialspoint.com/laravel/laravel_installation.htm
+- https://www.tutsmake.com/laravel-5-7-create-first-ajax-crud-application/
+
