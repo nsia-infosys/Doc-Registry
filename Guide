@@ -1,0 +1,29 @@
+- How to run the project
+php artisan serve
+
+- You can enable the maintenance mode on your Laravel web application using the following command
+php artisan down
+
+- you can disable the maintenance mode on your web application using following command
+php artisan up
+
+- Laravel uses the following command to create forms and the associated controllers to perform authentication
+php artisan make:auth
+
+- Create database with name data_entry in mysql
+
+- php artisan make:model --migration Book
+- php artisan make:model --migration Page
+
+- php artisan make:controller BookController --resource
+- php artisan make:controller PageController --resource
+
+- Run php artisan migrate
+- Run php artisan db:seed to run seeders, if any.
+- Run php artisan serve
+
+
+
+
+References:
+- https://www.tutorialspoint.com/laravel/laravel_installation.htm
