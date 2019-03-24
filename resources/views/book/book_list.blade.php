@@ -4,9 +4,8 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-12">
-            <a href="javascript:void(0)" class="btn btn-success mb-2" id="create-new-book">Add Book</a> 
-            <a href="https://www.tutsmake.com/jquery-submit-form-ajax-php-laravel-5-7-without-page-load/" class="btn btn-secondary mb-2 float-right">Back to Post</a>
-            <table class="table table-bordered" id="laravel_crud">
+            <a href="javascript:void(0)" style="float: right;" class="btn btn-success mb-2" onclick="newRecord()" id="create-new-book"><span class="oi oi-plus"></span></a>
+            <table class="table table-bordered" id="book_crud">
                 <thead>
                     <tr>
                         <th>Id</th>
@@ -16,7 +15,7 @@
                         <th>Assign To Registrar</th>
                         <th>Assigned Date</th>
                         <th>Registrar Status</th>
-                        <td colspan="2">Action</td>
+                        <th width="200px;">Action</th>
                     </tr>
                 </thead>
                 <tbody id="books-crud">
@@ -29,9 +28,12 @@
                         <td>{{ $record->assign_to_registrar }}</td>
                         <td>{{ $record->assigned_date }}</td>
                         <td>{{ $record->registrar_status }}</td>
-                        <td><a href="javascript:void(0)" id="edit-book" data-id="{{ $record->id }}" class="btn btn-info">Edit</a></td>
                         <td>
-                        <a href="javascript:void(0)" id="delete-book" data-id="{{ $record->id }}" class="btn btn-danger delete-book">Delete</a></td>
+                            <a href="/books/{{ $record->id }}/pages" id="view-book" data-id="{{ $record->id }}" class="btn btn-light"><span class="oi oi-book"></span></a>
+                            <a href="javascript:void(0)" id="view-book" onclick="viewRecord({{ $record->id }})" data-id="{{ $record->id }}" class="btn btn-info"><span class="oi oi-eye"></span></a>
+                            <a href="javascript:void(0)" id="edit-book" onclick="editRecord({{ $record->id }})" data-id="{{ $record->id }}" class="btn btn-light"><span class="oi oi-pencil"></span></a>
+                            <a href="javascript:void(0)" id="delete-book" onclick="deleteRecord({{ $record->id }})" data-id="{{ $record->id }}" class="btn btn-danger delete-book"><span class="oi oi-trash"></span></a>
+                        </td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -41,33 +43,107 @@
     </div>
 </div>
 
+@include('book.partials.new')
+
 <script>
-  $(document).ready(function () {
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    function refershPage() {
+        location.reload();
+    }
+
+    function newRecord() {
+        console.log("New Record");
+        $('#create-book-modal').trigger("reset");
+        $('#create-book-modal').modal('show');
+        $("#create-book-modal").modal();
+    }
+
+    function viewRecord(recordId) {
+        console.log("View: " + recordId);
+        
+        $.ajax({
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            url : "{!! url('/books'); !!}/" + recordId,
+            type: "GET"
+        }).done(function (data) {
+            $(data).modal();
+            // $('#list-table').html(data);
+            // location.hash = page;
+        }).fail(function () {
+            alert('Data could not be loaded.');
+        });
+    }
+
+    function editRecord(recordId) {
+        console.log("Edit: " + recordId);
+
+        $.ajax({
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            url : "{!! url('/books'); !!}/" + recordId + "/edit",
+            type: "GET"
+        }).done(function (data) {
+            $(data).modal();
+            // $('#list-table').html(data);
+            // location.hash = page;
+        }).fail(function () {
+            alert('Data could not be loaded.');
+        });
+    }
+
+    function deleteRecord(recordId) {
+        console.log("Delete: " + recordId);
+
+        if (confirm("Do you want to delete this record?")) {
+            $.ajax({
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                url : "{!! url('/books'); !!}/" + recordId,
+                type: "DELETE"
+            }).done(function (data) {
+                console.log(data);
+                refershPage();
+            }).fail(function () {
+                alert('Data could not be loaded.');
+            });
         }
-    });
-    /*  When user click add user button */
-    $('#create-new-book').click(function () {
-        $('#btn-save').val("create-user");
-        $('#userForm').trigger("reset");
-        $('#userCrudModal').html("Add New User");
-        $('#ajax-crud-modal').modal('show');
-    });
+    }
+
+    $(document).ready(function () {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        /*  When user click add user button */
+        $('#create-new-book').click(function () {
+            $('#create-book-modal').trigger("reset");
+            $('#create-book-modal').modal('show');
+        });
+
+        /* When click edit user */
+        $('body').on('click', '#edit-user', function () {
+            var book_id = $(this).data('id');
+            $.get('books/' + book_id +'/edit', function (data) {
+                $('#userCrudModal').html("Edit User");
+                $('#btn-save').val("edit-user");
+                $('#ajax-crud-modal').modal('show');
+                $('#user_id').val(data.id);
+                $('#name').val(data.name);
+                $('#email').val(data.email);
+            });
+        });
+        
+
+
+
+
+
+
+
+
+
+        
  
-   /* When click edit user */
-    $('body').on('click', '#edit-user', function () {
-      var user_id = $(this).data('id');
-      $.get('ajax-crud/' + user_id +'/edit', function (data) {
-         $('#userCrudModal').html("Edit User");
-          $('#btn-save').val("edit-user");
-          $('#ajax-crud-modal').modal('show');
-          $('#user_id').val(data.id);
-          $('#name').val(data.name);
-          $('#email').val(data.email);
-      })
-   });
+   
    //delete user login
     $('body').on('click', '.delete-user', function () {
         var user_id = $(this).data("id");

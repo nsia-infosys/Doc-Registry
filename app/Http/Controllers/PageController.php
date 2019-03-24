@@ -2,7 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Page;
+use App\Models\Province;
+use App\Models\District;
+use App\Models\BookType;
+use Request;
+use Response;
+use View;
+use App;
 
 class PageController extends Controller
 {
@@ -11,9 +18,13 @@ class PageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($bookId)
     {
-        //
+        $pages = Page::where('book_id', $bookId)->orderBy('id','desc')->paginate(4);
+        $provinces = Province::select(['id', 'name_' . App::getLocale() . ' as name'])->get();
+        $districts = District::select(['id', 'name_' . App::getLocale() . ' as name'])->get();
+        $book_types = BookType::select(['id', 'name_' . App::getLocale() . ' as name'])->get();
+        return view('page.page_list', compact('pages', 'provinces', 'districts', 'book_types'));
     }
 
     /**
