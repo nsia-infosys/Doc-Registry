@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\Page;
 use App\Models\Province;
 use App\Models\District;
 use App\Models\BookType;
+use App\Models\User;
 use Request;
 use Response;
 use View;
@@ -35,7 +37,9 @@ class BookController extends Controller
         $provinces = Province::select(['id', 'name_' . App::getLocale() . ' as name'])->get();
         $districts = District::select(['id', 'name_' . App::getLocale() . ' as name'])->get();
         $book_types = BookType::select(['id', 'name_' . App::getLocale() . ' as name'])->get();
-        return view('book.book_list', compact('books', 'provinces', 'districts', 'book_types', 'book_details'));
+
+        $assignees = User::select(['id', 'name'])->get();
+        return view('book.book_list', compact('books', 'provinces', 'districts', 'book_types', 'book_details', 'assignees'));
     }
 
     /**
@@ -155,5 +159,22 @@ class BookController extends Controller
     {
         $book = Book::where('id',$id)->delete();
         return Response::json($book);
+    }
+
+    public function listBooks($offset = 0, $limit = 10)
+    {
+        $book = Book::offset($offset)->limit($limit)->get();
+        return Response::json($book);
+    }
+
+    public function getBookPages($bookId)
+    {
+        $regPages = Page::select('id')->where('book_id', $bookId)->orderBy('id','asc')->pluck('id')->toArray();
+        // $regPages = array_column($pages, 'id');
+        $book = Book::find($bookId);
+        return Response::json(array(
+            'book' => $book,
+            'regPages' => $regPages
+        ));
     }
 }

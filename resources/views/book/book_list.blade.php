@@ -15,7 +15,7 @@
                         <th>Assign To Registrar</th>
                         <th>Assigned Date</th>
                         <th>Registrar Status</th>
-                        <th width="200px;">Action</th>
+                        <th width="240px;">Action</th>
                     </tr>
                 </thead>
                 <tbody id="books-crud">
@@ -29,10 +29,12 @@
                         <td>{{ $record->assigned_date }}</td>
                         <td>{{ $record->registrar_status }}</td>
                         <td>
-                            <a href="/books/{{ $record->id }}/pages" id="view-book" data-id="{{ $record->id }}" class="btn btn-light"><span class="oi oi-book"></span></a>
-                            <a href="javascript:void(0)" id="view-book" onclick="viewRecord({{ $record->id }})" data-id="{{ $record->id }}" class="btn btn-info"><span class="oi oi-eye"></span></a>
-                            <a href="javascript:void(0)" id="edit-book" onclick="editRecord({{ $record->id }})" data-id="{{ $record->id }}" class="btn btn-light"><span class="oi oi-pencil"></span></a>
-                            <a href="javascript:void(0)" id="delete-book" onclick="deleteRecord({{ $record->id }})" data-id="{{ $record->id }}" class="btn btn-danger delete-book"><span class="oi oi-trash"></span></a>
+                            <!-- <a href="/books/{{ $record->id }}/pages" id="view-book" title="Open Book" data-id="{{ $record->id }}" class="btn btn-light"><span class="oi oi-book"></span></a> -->
+                            <a href="/main/{{ $record->id }}" id="view-book" title="Open Book" data-id="{{ $record->id }}" class="btn btn-light"><span class="oi oi-book"></span></a>
+                            <a href="javascript:void(0)" id="assign-book" title="Assign Book" onclick="assignRecord({{ $record->id }}, '{{ $record->book_name }}')" data-id="{{ $record->id }}" class="btn btn-secondary"><span class="oi oi-bookmark"></span></a>
+                            <a href="javascript:void(0)" id="view-book" title="View Book" onclick="viewRecord({{ $record->id }})" data-id="{{ $record->id }}" class="btn btn-info"><span class="oi oi-eye"></span></a>
+                            <a href="javascript:void(0)" id="edit-book" title="Edit Book" onclick="editRecord({{ $record->id }})" data-id="{{ $record->id }}" class="btn btn-light"><span class="oi oi-pencil"></span></a>
+                            <a href="javascript:void(0)" id="delete-book" title="Delete Book" onclick="deleteRecord({{ $record->id }})" data-id="{{ $record->id }}" class="btn btn-danger delete-book"><span class="oi oi-trash"></span></a>
                         </td>
                     </tr>
                     @endforeach
@@ -44,6 +46,8 @@
 </div>
 
 @include('book.partials.new')
+
+@include('book.partials.assign')
 
 <script>
     function refershPage() {
@@ -106,31 +110,45 @@
         }
     }
 
-    $(document).ready(function () {
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
+    function assignRecord(id, book_name) {
+        console.log("Assign Record");
+        $('#assign-book-modal').trigger("reset");
+        $('#id', '#assign-book-modal').val(id);
+        $('#book_name', '#assign-book-modal').val(book_name);
+        $('#assign-book-modal').modal('show');
+        $("#assign-book-modal").modal();
+    }
 
-        /*  When user click add user button */
-        $('#create-new-book').click(function () {
-            $('#create-book-modal').trigger("reset");
-            $('#create-book-modal').modal('show');
-        });
 
-        /* When click edit user */
-        $('body').on('click', '#edit-user', function () {
-            var book_id = $(this).data('id');
-            $.get('books/' + book_id +'/edit', function (data) {
-                $('#userCrudModal').html("Edit User");
-                $('#btn-save').val("edit-user");
-                $('#ajax-crud-modal').modal('show');
-                $('#user_id').val(data.id);
-                $('#name').val(data.name);
-                $('#email').val(data.email);
-            });
-        });
+
+
+
+
+//     $(document).ready(function () {
+//         $.ajaxSetup({
+//             headers: {
+//                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+//             }
+//         });
+
+//         /*  When user click add user button */
+//         $('#create-new-book').click(function () {
+//             $('#create-book-modal').trigger("reset");
+//             $('#create-book-modal').modal('show');
+//         });
+
+//         /* When click edit user */
+//         $('body').on('click', '#edit-user', function () {
+//             var book_id = $(this).data('id');
+//             $.get('books/' + book_id +'/edit', function (data) {
+//                 $('#userCrudModal').html("Edit User");
+//                 $('#btn-save').val("edit-user");
+//                 $('#ajax-crud-modal').modal('show');
+//                 $('#user_id').val(data.id);
+//                 $('#name').val(data.name);
+//                 $('#email').val(data.email);
+//             });
+//         });
         
 
 
@@ -144,61 +162,61 @@
         
  
    
-   //delete user login
-    $('body').on('click', '.delete-user', function () {
-        var user_id = $(this).data("id");
-        confirm("Are You sure want to delete !");
+//    //delete user login
+//     $('body').on('click', '.delete-user', function () {
+//         var user_id = $(this).data("id");
+//         confirm("Are You sure want to delete !");
  
-        $.ajax({
-            type: "DELETE",
-            url: "{{ url('ajax-crud')}}"+'/'+user_id,
-            success: function (data) {
-                $("#user_id_" + user_id).remove();
-            },
-            error: function (data) {
-                console.log('Error:', data);
-            }
-        });
-    });   
-  });
+//         $.ajax({
+//             type: "DELETE",
+//             url: "{{ url('ajax-crud')}}"+'/'+user_id,
+//             success: function (data) {
+//                 $("#user_id_" + user_id).remove();
+//             },
+//             error: function (data) {
+//                 console.log('Error:', data);
+//             }
+//         });
+//     });   
+//   });
  
- if ($("#userForm").length > 0) {
-      $("#userForm").validate({
+//  if ($("#userForm").length > 0) {
+//       $("#userForm").validate({
  
-     submitHandler: function(form) {
+//      submitHandler: function(form) {
  
-      var actionType = $('#btn-save').val();
-      $('#btn-save').html('Sending..');
+//       var actionType = $('#btn-save').val();
+//       $('#btn-save').html('Sending..');
       
-      $.ajax({
-          data: $('#userForm').serialize(),
-          url: "https://www.tutsmake.com/laravel-example/ajax-crud/store",
-          type: "POST",
-          dataType: 'json',
-          success: function (data) {
-              var user = '<tr id="user_id_' + data.id + '"><td>' + data.id + '</td><td>' + data.name + '</td><td>' + data.email + '</td>';
-              user += '<td><a href="javascript:void(0)" id="edit-user" data-id="' + data.id + '" class="btn btn-info">Edit</a></td>';
-              user += '<td><a href="javascript:void(0)" id="delete-user" data-id="' + data.id + '" class="btn btn-danger delete-user">Delete</a></td></tr>';
+//       $.ajax({
+//           data: $('#userForm').serialize(),
+//           url: "https://www.tutsmake.com/laravel-example/ajax-crud/store",
+//           type: "POST",
+//           dataType: 'json',
+//           success: function (data) {
+//               var user = '<tr id="user_id_' + data.id + '"><td>' + data.id + '</td><td>' + data.name + '</td><td>' + data.email + '</td>';
+//               user += '<td><a href="javascript:void(0)" id="edit-user" data-id="' + data.id + '" class="btn btn-info">Edit</a></td>';
+//               user += '<td><a href="javascript:void(0)" id="delete-user" data-id="' + data.id + '" class="btn btn-danger delete-user">Delete</a></td></tr>';
                
               
-              if (actionType == "create-user") {
-                  $('#users-crud').prepend(user);
-              } else {
-                  $("#user_id_" + data.id).replaceWith(user);
-              }
+//               if (actionType == "create-user") {
+//                   $('#users-crud').prepend(user);
+//               } else {
+//                   $("#user_id_" + data.id).replaceWith(user);
+//               }
  
-              $('#userForm').trigger("reset");
-              $('#ajax-crud-modal').modal('hide');
-              $('#btn-save').html('Save Changes');
+//               $('#userForm').trigger("reset");
+//               $('#ajax-crud-modal').modal('hide');
+//               $('#btn-save').html('Save Changes');
               
-          },
-          error: function (data) {
-              console.log('Error:', data);
-              $('#btn-save').html('Save Changes');
-          }
-      });
-    }
-  })
-}
+//           },
+//           error: function (data) {
+//               console.log('Error:', data);
+//               $('#btn-save').html('Save Changes');
+//           }
+//       });
+//     }
+//   })
+// }
 </script>
 @endsection

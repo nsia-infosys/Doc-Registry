@@ -51,17 +51,17 @@
 
                 <div class="form-group">
                     <label class="control-label" for="title">Start Page No</label>
-                    <input type="text" name="volume_no" class="form-control" data-error="Please enter Volume No." required />
+                    <input type="text" name="start_page_no" class="form-control" data-error="Please enter Start Page No." required />
                     <div class="help-block with-errors"></div>
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="title">End Page No</label>
-                    <input type="text" name="volume_no" class="form-control" data-error="Please enter Volume No." required />
+                    <input type="text" name="end_page_no" class="form-control" data-error="Please enter End Page No." required />
                     <div class="help-block with-errors"></div>
                 </div>
                 <div class="form-group">
                     <label class="control-label" for="title">Total Pages</label>
-                    <input type="text" name="volume_no" class="form-control" data-error="Please enter Volume No." />
+                    <input type="text" name="total_pages" class="form-control" data-error="Please enter Volume No." />
                     <div class="help-block with-errors"></div>
                 </div>
 

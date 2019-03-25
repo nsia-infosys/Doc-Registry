@@ -19,6 +19,13 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('/books/list/{offset?}/{limit?}', 'BookController@listBooks');
+
+Route::get('/books/{bookId}/pages', 'BookController@getBookPages');
+
 Route::resource('/books','BookController');
 
-Route::resource('/books/{bookId}/pages','PageController');
+// Route::resource('/books/{bookId}/pages','PageController');
+
+Route::get('/main/{bookId?}', 'MainController@index');
+

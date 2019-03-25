@@ -1,0 +1,11 @@
+.cols-container>div {
+    height: 85vh;
+}
+
+.list-group-item {
+    cursor: pointer;
+}
+
+.list-group-item:hover {
+    background-color: #a6d0f3;
+}
