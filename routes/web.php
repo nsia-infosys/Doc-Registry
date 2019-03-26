@@ -31,5 +31,7 @@ Route::get('/pages/{pageId}', 'PageController@show');
 // Route::resource('pages/{pageId}','PageController');
 // Route::resource('/books/{bookId}/pages','PageController');
 
+Route::get('/main/page/{pageId}', 'MainController@showPage');
 Route::get('/main/{bookId?}', 'MainController@index');
+
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\Page;
 use App\Models\Province;
 use App\Models\District;
 use App\Models\BookType;
@@ -22,4 +23,12 @@ class MainController extends Controller
         return view('general.view', compact('books', 'id'));
     }
 
+    public function showPage($id)
+    {
+        $page = Page::find($id);
+        if (Request::ajax()) {
+            return view('general.partials.view_page', compact('page'));
+        }
+        return Response::json($page);
+    }
 }

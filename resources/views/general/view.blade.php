@@ -8,8 +8,8 @@
                 <div class="card-header text-center">
                     Books
                 </div>
-                <ul class="list-group list-group-flush">
-                <li onclick="loadPrevBooks()" class="list-group-item text-center"><span class="oi oi-arrow-circle-top"></span></li>
+                <ul class="list-group list-group-flush" style="height: 75vh; overflow: scroll;">
+                    <li onclick="loadPrevBooks()" class="list-group-item text-center"><span class="oi oi-arrow-circle-top"></span></li>
                     @foreach($books as $book)
                         @if($book->id == $id)
                             <li record-id="{{ $book->id }}" onclick="fetchPages({{ $book->id }})" class="list-group-item bg-info">{{ $book->id . ' - ' . $book->book_name . ' - ' . $book->volume_no}}</li>
@@ -33,7 +33,7 @@
                     </div>
                 </div>
 
-                <div class="pages-list"></div>
+                <div class="pages-list" style="padding-left: 20px; height: 75vh; overflow: scroll;"></div>
             </div>
         </div>
         <div class="col-sm-6 page-details-column d-none">
@@ -48,7 +48,7 @@
                     </div>
                 </div>
 
-                <div class="page-details"></div>
+                <div class="page-details" style="min-height: 75vh; overflow: scroll;"></div>
             </div>
         </div>
     </div>
@@ -88,12 +88,12 @@
 
         $.ajax({
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url : "{!! url('/pages'); !!}/" + pageId,
+            url : "{!! url('/main'); !!}/page/" + pageId,
             type: "GET"
         }).done(function (data) {
             $(".spinner-grow", ".page-details-column").hide();
 
-            var pageDetailsDiv = $(".page-details", ".page-details-column");
+            var pageDetailsDiv = $(".page-details", ".page-details-column").html(data);
 
             
         }).fail(function () {
@@ -130,7 +130,7 @@
             var endPageNo = data.book.end_page_no;
 
             for (let i = startPageNo; i <= endPageNo; i++) {
-                var inlineDiv = $("<div>").addClass("form-check form-check-inline");
+                var inlineDiv = $("<div style='padding: 8px'>").addClass("form-check form-check-inline");
                 var radioEl = $("<input type='radio' name='page' onclick='fetchPage(" + i +")'>").addClass("form-check-input");
                 var labelEl = $("<label>").text(i).addClass("form-check-label");
 

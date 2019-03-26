@@ -56,7 +56,11 @@ class PageController extends Controller
      */
     public function show($id)
     {
-        //
+        $page = Page::find($id);
+        if (Request::ajax()) {
+            return view('page.partials.view', compact('page'));
+        }
+        return Response::json($page);
     }
 
     /**

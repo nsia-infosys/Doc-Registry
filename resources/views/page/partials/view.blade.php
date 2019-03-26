@@ -2,7 +2,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel">View Book</h4>
+                <h4 class="modal-title" id="myModalLabel">View Page</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
             </div>
             <div class="modal-body">
@@ -10,12 +10,12 @@
                 <form>
                     <div class="form-group  col-md-12">
                         <label>ID:</label>
-                        <p class="form-control-static"> {{ $book->id}} </p>
+                        <p class="form-control-static"> </p>
                     </div>
 
                     <div class="form-group  col-md-12">
                         <label>Book Name:</label>
-                        <p class="form-control-static"> {{ $book->book_name}} </p> 
+                        <p class="form-control-static"> </p> 
                     </div>
                     <div class="form-group  col-md-12">
                         <label>Book Type:</label>
@@ -59,11 +59,11 @@
                     </div>
                     <div class="form-group  col-md-12">
                         <label>Created At:</label>
-                        <p class="form-control-static"> {{ $book->created_at}} </p>
+                        <p class="form-control-static">  </p>
                     </div>
                     <div class="form-group  col-md-12">
                         <label>Updated At:</label>
-                        <p class="form-control-static"> {{ $book->updated_at}} </p>
+                        <p class="form-control-static">  </p>
                     </div>
                     <div class="clearfix"></div>
                     <div class="col-md-12 margin-bottom-20 margin-top-20">
