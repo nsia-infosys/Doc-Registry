@@ -9,13 +9,15 @@
                     Books
                 </div>
                 <ul class="list-group list-group-flush">
+                <li onclick="loadPrevBooks()" class="list-group-item text-center"><span class="oi oi-arrow-circle-top"></span></li>
                     @foreach($books as $book)
                         @if($book->id == $id)
-                            <li record-id="{{ $book->id }}" onclick="fetchPages({{ $book->id }})" class="list-group-item bg-info">{{ $book->book_name }}</li>
+                            <li record-id="{{ $book->id }}" onclick="fetchPages({{ $book->id }})" class="list-group-item bg-info">{{ $book->id . ' - ' . $book->book_name . ' - ' . $book->volume_no}}</li>
                         @else
-                            <li record-id="{{ $book->id }}" onclick="fetchPages({{ $book->id }})" class="list-group-item">{{ $book->book_name }}</li>
+                            <li record-id="{{ $book->id }}" onclick="fetchPages({{ $book->id }})" class="list-group-item">{{ $book->id . ' - ' . $book->book_name . ' - ' . $book->volume_no}}</li>
                         @endif
                     @endforeach
+                    <li onclick="loadNextBooks()" class="list-group-item text-center"><span class="oi oi-arrow-circle-bottom"></span></li>
                 </ul>
             </div>
         </div>
@@ -34,6 +36,21 @@
                 <div class="pages-list"></div>
             </div>
         </div>
+        <div class="col-sm-6 page-details-column d-none">
+            <div class="card">
+                <div class="card-header text-center">
+                    Page Details
+                </div>
+
+                <div class="text-center">
+                    <div class="spinner-grow text-info m-5 hidden" style="width: 3rem; height: 3rem; display: none;" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                </div>
+
+                <div class="page-details"></div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -45,8 +62,44 @@
         document.title=url;
     }
 
+    function adjustColumns() {
+        var colsContainerEl = $(".cols-container");
+        var totalCols = $(".cols-container>div:visible").length;
+
+        if(totalCols == 2) {
+            $(".books-column").removeClass("col-sm-6").addClass("col-sm-6");
+            $(".pages-column").removeClass("col-sm-6").addClass("col-sm-6");
+            // $(".page-details-column").removeClss("col-sm-6").addClass("col-sm-6");
+        } else if(totalCols == 3) {
+            $(".books-column").removeClass("col-sm-6").addClass("col-sm-2");
+            $(".pages-column").removeClass("col-sm-6").addClass("col-sm-2");
+            $(".page-details-column").removeClass("col-sm-6").addClass("col-sm-8");
+        }
+    }
+
     function fetchPage(pageId) {
         console.log("Page ID: " + pageId);
+
+        $(".page-details", ".page-details-column").empty();
+        $(".spinner-grow", ".page-details-column").show();
+
+        $(".page-details-column").removeClass("d-none");
+        adjustColumns()
+
+        $.ajax({
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            url : "{!! url('/pages'); !!}/" + pageId,
+            type: "GET"
+        }).done(function (data) {
+            $(".spinner-grow", ".page-details-column").hide();
+
+            var pageDetailsDiv = $(".page-details", ".page-details-column");
+
+            
+        }).fail(function () {
+            $(".spinner-grow", ".page-details-column").hide();
+            alert('Data could not be loaded.');
+        });
     }
 
     function fetchPages(bookId) {
@@ -54,6 +107,10 @@
 
         $(".pages-list", ".pages-column").empty();
         $(".spinner-grow", ".pages-column").show();
+
+        //hide page detials div
+        $(".page-details-column").addClass("d-none");
+        adjustColumns();
 
         //remove the highlight from all and add to clicked item
         $(".list-group-item", ".books-column").removeClass("bg-info");
@@ -82,7 +139,6 @@
                 $(inlineDiv).appendTo(pagesListDiv)
             }
 
-            console.log(data);
             // $('#list-table').html(data);
             // location.hash = page;
         }).fail(function () {

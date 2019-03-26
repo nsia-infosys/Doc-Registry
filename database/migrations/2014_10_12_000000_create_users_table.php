@@ -29,7 +29,9 @@ class CreateUsersTable extends Migration
                 'id' => 1,
                 'name' => 'Pardess',
                 'email' => 'pardess@nsia.gov.af',
-                'password' => '$2y$10$XSo/qPZN4CjxA24nU8aPH.P4rvW3I2F9/dl8ESbWPrZQ8GLAdPDJ2'
+                'password' => '$2y$10$XSo/qPZN4CjxA24nU8aPH.P4rvW3I2F9/dl8ESbWPrZQ8GLAdPDJ2',
+                'created_at' => '2019-03-26 06:43:25',
+                'updated_at' => '2019-03-26 06:43:25'
             )));
     }
 
