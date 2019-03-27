@@ -40,6 +40,7 @@
             <div class="card">
                 <div class="card-header text-center">
                     Page Details
+                    <button onclick="toggleWidth()" class="btn btn-light btn-sm" style="float: right; padding: 0px;"><span class="oi oi-resize-width" ></span></button>
                 </div>
 
                 <div class="text-center">
@@ -62,17 +63,30 @@
         document.title=url;
     }
 
+    function toggleWidth() {
+        var detailsPage = $(".page-details-column");
+        if($(detailsPage).hasClass("col-sm-12")) {
+            $(".books-column").removeClass("col-sm-6 col-sm-2 d-none").addClass("col-sm-2");
+            $(".pages-column").removeClass("col-sm-6 col-sm-2 d-none").addClass("col-sm-2");
+            $(".page-details-column").removeClass("col-sm-8 col-sm-6 col-sm-12").addClass("col-sm-8");
+        } else {
+            $(".books-column").removeClass("col-sm-6 col-sm-2").addClass("d-none");
+            $(".pages-column").removeClass("col-sm-6 col-sm-2").addClass("d-none");
+            $(".page-details-column").removeClass("col-sm-8 col-sm-6").addClass("col-sm-12");
+        }
+   }
+
     function adjustColumns() {
         var colsContainerEl = $(".cols-container");
         var totalCols = $(".cols-container>div:visible").length;
 
         if(totalCols == 2) {
-            $(".books-column").removeClass("col-sm-6").addClass("col-sm-6");
-            $(".pages-column").removeClass("col-sm-6").addClass("col-sm-6");
+            $(".books-column").removeClass("col-sm-6 col-sm-0").addClass("col-sm-6");
+            $(".pages-column").removeClass("col-sm-6 col-sm-0").addClass("col-sm-6");
             // $(".page-details-column").removeClss("col-sm-6").addClass("col-sm-6");
         } else if(totalCols == 3) {
-            $(".books-column").removeClass("col-sm-6").addClass("col-sm-2");
-            $(".pages-column").removeClass("col-sm-6").addClass("col-sm-2");
+            $(".books-column").removeClass("col-sm-6 col-sm-0").addClass("col-sm-2");
+            $(".pages-column").removeClass("col-sm-6 col-sm-0").addClass("col-sm-2");
             $(".page-details-column").removeClass("col-sm-6").addClass("col-sm-8");
         }
     }
@@ -118,7 +132,7 @@
 
         $.ajax({
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
-            url : "{!! url('/books'); !!}/" + bookId + "/pages",
+            url : "{!! url('/main'); !!}/" + bookId + "/pages",
             type: "GET"
         }).done(function (data) {
             changeURL(bookId);

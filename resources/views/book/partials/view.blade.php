@@ -1,5 +1,5 @@
 <div id="view-modal" class="modal fade price-quote" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" id="myModalLabel">View Book</h4>
@@ -8,62 +8,96 @@
             <div class="modal-body">
               <!-- content goes here -->
                 <form>
-                    <div class="form-group  col-md-12">
-                        <label>ID:</label>
-                        <p class="form-control-static"> {{ $book->id}} </p>
+                    <div class="form-group">
+                        <label class="col-form-label">ID:</label>
+                        <div class="col-sm-12">
+                            <input type="text" value="{{ $book->id}}" readonly class="form-control-plaintext">
+                        </div>
                     </div>
 
-                    <div class="form-group  col-md-12">
-                        <label>Book Name:</label>
-                        <p class="form-control-static"> {{ $book->book_name}} </p> 
+                    <div class="form-group">
+                        <label class="col-form-label">Book Name:</label>
+                        <div class="col-sm-12">
+                            <input type="text" value="{{ $book->book_name }}" readonly class="form-control-plaintext">
+                        </div>
                     </div>
-                    <div class="form-group  col-md-12">
-                        <label>Book Type:</label>
-                        <p class="form-control-static">  </p>
+                    <div class="form-row">
+                        <div class="form-group col-sm-3">
+                            <label class="col-form-label">Book Type:</label>
+                            <div class="col-sm-12">
+                                <input type="text" value="" readonly class="form-control-plaintext">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-3">
+                            <label class="col-form-label">Province:</label>
+                            <div class="col-sm-12">
+                                <input type="text" value="" readonly class="form-control-plaintext">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-3">
+                            <label class="col-form-label">Distict:</label>
+                            <div class="col-sm-12">
+                                <input type="text" value="" readonly class="form-control-plaintext">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-3">
+                            <label class="col-form-label">Volume No:</label>
+                            <div class="col-sm-12">
+                                <input type="text" value="{{ $book->volume_no }}" readonly class="form-control-plaintext">
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group  col-md-12">
-                        <label>Province:</label>
-                        <p class="form-control-static">  </p>
+                    <div class="form-row">
+                        <div class="form-group col-sm-3">
+                            <label class="col-form-label">Start Page No:</label>
+                            <div class="col-sm-12">
+                                <input type="text" value="{{ $book->start_page_no }}" readonly class="form-control-plaintext">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-3">
+                            <label class="col-form-label">End Page No:</label>
+                            <div class="col-sm-12">
+                                <input type="text" value="{{ $book->end_page_no }}" readonly class="form-control-plaintext">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-3">
+                            <label class="col-form-label">Total Pages:</label>
+                            <div class="col-sm-12">
+                                <input type="text" value="{{ $book->total_pages }}" readonly class="form-control-plaintext">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-3">
+                            <label class="col-form-label">Entered Pages:</label>
+                            <div class="col-sm-12">
+                                <input type="text" value="{{ $book->entered_pages }}" readonly class="form-control-plaintext">
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group  col-md-12">
-                        <label>Distict:</label>
-                        <p class="form-control-static"> </p>
+                    <div class="form-group">
+                        <label class="col-form-label">Remarks:</label>
+                        <div class="col-sm-12">
+                            <input type="text" value="{{ $book->remarks }}" readonly class="form-control-plaintext">
+                        </div>
                     </div>
-                    <div class="form-group  col-md-12">
-                        <label>Volume No:</label>
-                        <p class="form-control-static"> </p>
+                    <div class="form-group">
+                        <label class="col-form-label">Book Details:</label>
+                        <div class="col-sm-12">
+                            <input type="text" value="" readonly class="form-control-plaintext">
+                        </div>
                     </div>
-                    <div class="form-group  col-md-12">
-                        <label>Start Page No:</label>
-                        <p class="form-control-static">  </p>
-                    </div>
-                    <div class="form-group  col-md-12">
-                        <label>End Page No:</label>
-                        <p class="form-control-static">  </p>
-                    </div>
-                    <div class="form-group  col-md-12">
-                        <label>Total Pages:</label>
-                        <p class="form-control-static">  </p>
-                    </div>
-                    <div class="form-group  col-md-12">
-                        <label>Entered Pages:</label>
-                        <p class="form-control-static">  </p>
-                    </div>
-                    <div class="form-group  col-md-12">
-                        <label>Remarks:</label>
-                        <p class="form-control-static"> </p>
-                    </div>
-                    <div class="form-group  col-md-12">
-                        <label>Book Details:</label>
-                        <p class="form-control-static">  </p>
-                    </div>
-                    <div class="form-group  col-md-12">
-                        <label>Created At:</label>
-                        <p class="form-control-static"> {{ $book->created_at}} </p>
-                    </div>
-                    <div class="form-group  col-md-12">
-                        <label>Updated At:</label>
-                        <p class="form-control-static"> {{ $book->updated_at}} </p>
+                    <div class="form-row">
+                        <div class="form-group col-sm-6">
+                            <label class="col-form-label">Created At:</label>
+                            <div class="col-sm-12">
+                                <input type="text" value="{{ $book->created_at }}" readonly class="form-control-plaintext">
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <label class="col-form-label">Updated At:</label>
+                            <div class="col-sm-12">
+                                <input type="text" value="{{ $book->updated_at }}" readonly class="form-control-plaintext">
+                            </div>
+                        </div>
                     </div>
                     <div class="clearfix"></div>
                     <div class="col-md-12 margin-bottom-20 margin-top-20">

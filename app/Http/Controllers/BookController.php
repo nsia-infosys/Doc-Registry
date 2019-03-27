@@ -12,6 +12,7 @@ use Request;
 use Response;
 use View;
 use App;
+use Illuminate\Support\Facades\Auth;
 
 class BookController extends Controller
 {
@@ -60,27 +61,23 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
+        if (!Auth::user()->hasPermissionTo('Create Book')) {
+            abort('401');
+        }
+
         $this->validate($request, [
-            'name' => 'bail|required|min:2',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-            'roles' => 'required|min:1'
+            'book_name' => 'required',
+            'province_id' => 'required',
+            'district_id' => 'required',
+            'volume_no' => 'required',
+            'start_page_no' => 'required',
+            'end_page_no' => 'required',
+            'entered_pages' => 'required'
         ]);
 
-
-        // $bookId = $request->book_id;
-        // $book   =   Book::updateOrCreate(['id' => $bookId],
-        //             ['name' => $request->name, 'email' => $request->email]);
-    
-        // return Response::json($book);
-
-        // Create the book
         if ( $book = Book::create($request->except('user_id')) ) {
-
             $this->syncPermissions($request, $book);
-
             flash('Book has been created.');
-
         } else {
             flash()->error('Unable to create Book.');
         }
@@ -96,6 +93,10 @@ class BookController extends Controller
      */
     public function show($id)
     {
+        if (!Auth::user()->hasPermissionTo('View Book')) {
+            abort('401');
+        }
+
         $book = Book::find($id);
         if (Request::ajax()) {
             return view('book.partials.view', compact('book'));
@@ -111,14 +112,23 @@ class BookController extends Controller
      */
     public function edit($id)
     {
+        if (!Auth::user()->hasPermissionTo('Edit Book')) {
+            abort('401');
+        }
+
         // $where = array('id' => $id);
         // $book  = Book::where($where)->first();
         $book = Book::find($id);
-        
-        if (Request::ajax()) {
-            return view('book.partials.edit', compact('user'));
-        }
-        return Response::json($book);
+        $book_details = array(
+            array('key'=> 0, 'value'=> 'Kochi'),
+            array('key'=> 1, 'value'=> 'Female Books'),
+            array('key'=> 2, 'value'=> 'Male Books')
+        );
+        $provinces = Province::select(['id', 'name_' . App::getLocale() . ' as name'])->get();
+        $districts = District::select(['id', 'name_' . App::getLocale() . ' as name'])->get();
+        $book_types = BookType::select(['id', 'name_' . App::getLocale() . ' as name'])->get();
+
+        return view('book.partials.edit', compact('book', 'provinces', 'districts', 'book_types', 'book_details', 'id'));
     }
 
     /**
@@ -130,6 +140,10 @@ class BookController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if (!Auth::user()->hasPermissionTo('Edit Book')) {
+            abort('401');
+        }
+
         $this->validate($request, [
             'name' => 'bail|required|min:2',
             'email' => 'required|email|unique:users,email,' . $id,
@@ -157,24 +171,11 @@ class BookController extends Controller
      */
     public function destroy($id)
     {
+        if (!Auth::user()->hasPermissionTo('Delete Book')) {
+            abort('401');
+        }
+
         $book = Book::where('id',$id)->delete();
         return Response::json($book);
-    }
-
-    public function listBooks($offset = 0, $limit = 10)
-    {
-        $book = Book::offset($offset)->limit($limit)->get();
-        return Response::json($book);
-    }
-
-    public function getBookPages($bookId)
-    {
-        $regPages = Page::select('id')->where('book_id', $bookId)->orderBy('id','asc')->pluck('id')->toArray();
-        // $regPages = array_column($pages, 'id');
-        $book = Book::find($bookId);
-        return Response::json(array(
-            'book' => $book,
-            'regPages' => $regPages
-        ));
     }
 }

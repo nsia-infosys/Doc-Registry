@@ -9,3 +9,20 @@
 .list-group-item:hover {
     background-color: #a6d0f3;
 }
+
+#app>.py-4 {
+    padding-top: 0.5rem !important;
+}
+/* 
+.container {
+    margin-left: 5px !important;
+    margin-right: 5px !important;
+} */
+.books-column, .pages-column, .page-details-column {
+    padding-right: 2px !important;
+    padding-left: 2px !important;
+}
+
+/* .form-group>p {
+    padding-left: 25px;
+} */

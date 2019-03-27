@@ -84,9 +84,18 @@ class CreatePermissionTables extends Migration
             ->forget(config('permission.cache.key'));
 
             DB::table('permissions')->insert(array(
-                array('id' => 1, 'name' => 'View Book', 'guard_name' => 'web', 'created_at' => '2019-03-26 06:43:25', 'updated_at' => '2019-03-26 06:43:25'),
-                array('id' => 2, 'name' => 'Edit Book', 'guard_name' => 'web', 'created_at' => '2019-03-26 06:43:25', 'updated_at' => '2019-03-26 06:43:25'),
-                array('id' => 3, 'name' => 'Delete Book', 'guard_name' => 'web', 'created_at' => '2019-03-26 06:43:25', 'updated_at' => '2019-03-26 06:43:25')
+                array('id' => 1, 'name' => 'Administer roles & permissions', 'guard_name' => 'web', 'created_at' => '2019-03-26 06:43:25', 'updated_at' => '2019-03-26 06:43:25'),
+                array('id' => 2, 'name' => 'List Book', 'guard_name' => 'web', 'created_at' => '2019-03-26 06:43:25', 'updated_at' => '2019-03-26 06:43:25'),
+                array('id' => 3, 'name' => 'Create Book', 'guard_name' => 'web', 'created_at' => '2019-03-26 06:43:25', 'updated_at' => '2019-03-26 06:43:25'),
+                array('id' => 4, 'name' => 'View Book', 'guard_name' => 'web', 'created_at' => '2019-03-26 06:43:25', 'updated_at' => '2019-03-26 06:43:25'),
+                array('id' => 5, 'name' => 'Edit Book', 'guard_name' => 'web', 'created_at' => '2019-03-26 06:43:25', 'updated_at' => '2019-03-26 06:43:25'),
+                array('id' => 6, 'name' => 'Delete Book', 'guard_name' => 'web', 'created_at' => '2019-03-26 06:43:25', 'updated_at' => '2019-03-26 06:43:25'),
+                array('id' => 7, 'name' => 'List Page', 'guard_name' => 'web', 'created_at' => '2019-03-26 06:43:25', 'updated_at' => '2019-03-26 06:43:25'),
+                array('id' => 8, 'name' => 'Create Page', 'guard_name' => 'web', 'created_at' => '2019-03-26 06:43:25', 'updated_at' => '2019-03-26 06:43:25'),
+                array('id' => 9, 'name' => 'View Page', 'guard_name' => 'web', 'created_at' => '2019-03-26 06:43:25', 'updated_at' => '2019-03-26 06:43:25'),
+                array('id' => 10, 'name' => 'Edit Page', 'guard_name' => 'web', 'created_at' => '2019-03-26 06:43:25', 'updated_at' => '2019-03-26 06:43:25'),
+                array('id' => 11, 'name' => 'Delete Page', 'guard_name' => 'web', 'created_at' => '2019-03-26 06:43:25', 'updated_at' => '2019-03-26 06:43:25'),
+                array('id' => 12, 'name' => 'Assign Book', 'guard_name' => 'web', 'created_at' => '2019-03-26 06:43:25', 'updated_at' => '2019-03-26 06:43:25')
             ));
 
             DB::table('roles')->insert(array(
@@ -100,7 +109,16 @@ class CreatePermissionTables extends Migration
             DB::table('role_has_permissions')->insert(array(
                 array('permission_id' => 1, 'role_id' => 1),
                 array('permission_id' => 2, 'role_id' => 1),
-                array('permission_id' => 3, 'role_id' => 1)
+                array('permission_id' => 3, 'role_id' => 1),
+                array('permission_id' => 4, 'role_id' => 1),
+                array('permission_id' => 5, 'role_id' => 1),
+                array('permission_id' => 6, 'role_id' => 1),
+                array('permission_id' => 7, 'role_id' => 1),
+                array('permission_id' => 8, 'role_id' => 1),
+                array('permission_id' => 9, 'role_id' => 1),
+                array('permission_id' => 10, 'role_id' => 1),
+                array('permission_id' => 11, 'role_id' => 1),
+                array('permission_id' => 12, 'role_id' => 1)
             ));
 
             DB::table('model_has_roles')->insert(array(

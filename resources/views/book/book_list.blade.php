@@ -15,7 +15,7 @@
                         <th>Assign To Registrar</th>
                         <th>Assigned Date</th>
                         <th>Registrar Status</th>
-                        <th width="240px;">Action</th>
+                        <th width="250px;">Action</th>
                     </tr>
                 </thead>
                 <tbody id="books-crud">
@@ -31,10 +31,10 @@
                         <td>
                             <!-- <a href="/books/{{ $record->id }}/pages" id="view-book" title="Open Book" data-id="{{ $record->id }}" class="btn btn-light"><span class="oi oi-book"></span></a> -->
                             <a href="/main/{{ $record->id }}" id="view-book" title="Open Book" data-id="{{ $record->id }}" class="btn btn-light"><span class="oi oi-book"></span></a>
-                            <a href="javascript:void(0)" id="assign-book" title="Assign Book" onclick="assignRecord({{ $record->id }}, '{{ $record->book_name }}')" data-id="{{ $record->id }}" class="btn btn-secondary"><span class="oi oi-bookmark"></span></a>
-                            <a href="javascript:void(0)" id="view-book" title="View Book" onclick="viewRecord({{ $record->id }})" data-id="{{ $record->id }}" class="btn btn-info"><span class="oi oi-eye"></span></a>
-                            <a href="javascript:void(0)" id="edit-book" title="Edit Book" onclick="editRecord({{ $record->id }})" data-id="{{ $record->id }}" class="btn btn-light"><span class="oi oi-pencil"></span></a>
-                            <a href="javascript:void(0)" id="delete-book" title="Delete Book" onclick="deleteRecord({{ $record->id }})" data-id="{{ $record->id }}" class="btn btn-danger delete-book"><span class="oi oi-trash"></span></a>
+                            <a href="javascript:void(0)" id="assign-book" title="Assign Book" onclick="assignRecord({{ $record->id }}, '{{ $record->book_name }}')" data-id="{{ $record->id }}" class="btn btn-light"><span class="oi oi-share-boxed"></span></a>
+                            <a href="javascript:void(0)" id="view-book" title="View Book" onclick="viewRecord({{ $record->id }})" data-id="{{ $record->id }}" class="btn btn-light text-info"><span class="oi oi-eye"></span></a>
+                            <a href="javascript:void(0)" id="edit-book" title="Edit Book" onclick="editRecord({{ $record->id }})" data-id="{{ $record->id }}" class="btn btn-light text-primary"><span class="oi oi-pencil"></span></a>
+                            <a href="javascript:void(0)" id="delete-book" title="Delete Book" onclick="deleteRecord({{ $record->id }})" data-id="{{ $record->id }}" class="btn btn-light delete-book text-danger"><span class="oi oi-trash"></span></a>
                         </td>
                     </tr>
                     @endforeach
@@ -118,6 +118,66 @@
         $('#assign-book-modal').modal('show');
         $("#assign-book-modal").modal();
     }
+
+    function calculateTotalPages(el) {
+        var modalEl = $(el).closest(".modal")
+        var startPage = $("input[name='start_page_no']", modalEl).val();
+        var endPage = $("input[name='end_page_no']", modalEl).val();
+
+        if(startPage && endPage) {
+            $("input[name='total_pages']", modalEl).val(endPage-startPage);
+        }
+    }
+
+    $("#create-book-modal").on("submit", function(e) {
+        var modalEl = $(e.currentTarget);
+        if (!e.isDefaultPrevented()) {
+            var formData = $("form", modalEl).serialize();
+
+            $("button[type='submit']", modalEl).prop('disabled', true);
+            $(".spinner-border", modalEl).show();
+            $.ajax({
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                data: formData,
+                url : "{!! url('/books'); !!}" ,
+                type: "POST",
+                dataType: 'json',
+            }).done(function (data) {
+                console.log(data);
+                refershPage();
+            }).fail(function () {
+                $(".spinner-border", modalEl).hide();
+                $("button[type='submit']", modalEl).prop('disabled', false);
+                alert('Data could not be save.');
+            });
+        }
+        return false;
+    });
+
+    $("#edit-book-modal").on("submit", function(e) {
+        var modalEl = $(e.currentTarget);
+        if (!e.isDefaultPrevented()) {
+            var formData = $("form", modalEl).serialize();
+
+            $("button[type='submit']", modalEl).prop('disabled', true);
+            $(".spinner-border", modalEl).show();
+            $.ajax({
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                data: formData,
+                url : "{!! url('/books'); !!}" ,
+                type: "POST",
+                dataType: 'json',
+            }).done(function (data) {
+                console.log(data);
+                refershPage();
+            }).fail(function () {
+                $(".spinner-border", modalEl).hide();
+                $("button[type='submit']", modalEl).prop('disabled', false);
+                alert('Data could not be save.');
+            });
+        }
+        return false;
+    });
 
 
 
