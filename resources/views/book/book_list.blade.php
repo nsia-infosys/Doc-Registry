@@ -144,10 +144,13 @@
                 dataType: 'json',
             }).done(function (data) {
                 console.log(data);
-                refershPage();
-            }).fail(function () {
+                //  refershPage(); 
+            }).fail(function ($xhr) {
                 $(".spinner-border", modalEl).hide();
                 $("button[type='submit']", modalEl).prop('disabled', false);
+                var data = $xhr.responseJSON;
+                console.log(data);
+                e.preventDefault();
                 alert('Data could not be save.');
             });
         }

@@ -10,4 +10,7 @@ class Book extends Model
     {
          return $this->belongsTo(Province::Class);
     }
+    // protected $fillable = ['book_name'];
+    protected $fillable = ['book_name', 'book_type_id', 'province_id','volume_no','start_page_no',
+    'end_page_no'];
 }

@@ -1,17 +1,20 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Redirect;
 use App\Models\Book;
 use App\Models\Page;
 use App\Models\Province;
 use App\Models\District;
 use App\Models\BookType;
 use App\Models\User;
-use Request;
+use Validator;
 use Response;
+use QueryException;
+use Illuminate\Http\Request;
 use View;
 use App;
+
 use Illuminate\Support\Facades\Auth;
 
 class BookController extends Controller
@@ -61,28 +64,35 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
+        $request->request->add(['user_id' => Auth::user()->id]);
+        
         if (!Auth::user()->hasPermissionTo('Create Book')) {
             abort('401');
         }
-
-        $this->validate($request, [
+        $rules = array(
             'book_name' => 'required',
             'province_id' => 'required',
+            'book_type_id' =>'required',
             'district_id' => 'required',
             'volume_no' => 'required',
             'start_page_no' => 'required',
             'end_page_no' => 'required',
-            'entered_pages' => 'required'
-        ]);
-
-        if ( $book = Book::create($request->except('user_id')) ) {
+            'entered_pages' => 'required',
+        );
+        $validator = Validator::make($request->all(),$rules);
+        if($validator->fails()){
+            return $validator->errors();
+        }else{
+            return $request;
+            if ( $book = Book::create($request->except('user_id')) ) {
+        
             $this->syncPermissions($request, $book);
             flash('Book has been created.');
         } else {
             flash()->error('Unable to create Book.');
         }
 
-        return redirect()->route('book.book_list');
+        return redirect()->route('book.book_list');}
     }
 
     /**
