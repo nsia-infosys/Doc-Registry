@@ -124,9 +124,9 @@ class BookController extends Controller
         }
 
         $book = Book::find($id);
-        if (Request::ajax()) {
+        // if (Request::ajax()) {
             return view('book.partials.view', compact('book'));
-        }
+        // }
         return Response::json($book);
     }
 
