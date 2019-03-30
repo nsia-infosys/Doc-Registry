@@ -80,7 +80,6 @@
 
     function editRecord(recordId) {
         console.log("Edit: " + recordId);
-
         $.ajax({
             headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
             url : "{!! url('/books'); !!}/" + recordId + "/edit",
@@ -93,7 +92,7 @@
             alert('Data could not be loaded.');
         });
     }
-
+    
     function deleteRecord(recordId) {
         console.log("Delete: " + recordId);
 
@@ -105,6 +104,7 @@
             }).done(function (data) {
                 console.log(data);
                 refershPage();
+
             }).fail(function () {
                 alert('Data could not be loaded.');
             });
@@ -149,7 +149,6 @@
                 if(data.message == "Data not inserted"){
                     console.log(data);
                     var html='';
-                    
                     if(data.error.book_name){html+=data.error.book_name+"<br>"}
                     if(data.error.province_id){html+=data.error.province_id+"<br>"}
                     if(data.error.book_type_id){html+=data.error.book_type_id+"<br>"}
@@ -168,8 +167,6 @@
                 setTimeout(function() {
                     refershPage();
                    }, 1500);
-                
-                //{{--  refershPage();   --}}
             }).fail(function ($xhr) {
                          // {{--  $(".spinner-border", modalEl).hide();  --}}
                           //{{--  $("button[type='submit']", modalEl).prop('disabled', false);  --}}
@@ -182,14 +179,62 @@
         }
         return false;
     });
-
-    $("#edit-book-modal").on("submit", function(e) {
+    function update_data(id){
+    $("#edit-book-modal").on('submit',function(e) {
         var modalEl = $(e.currentTarget);
         if (!e.isDefaultPrevented()) {
             var formData = $("form", modalEl).serialize();
-
-            $("button[type='submit']", modalEl).prop('disabled', true);
-            $(".spinner-border", modalEl).show();
+     
+           $.ajax({
+                headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+                data: formData,
+                url : "{!! url('/books/"+id+"'); !!}" ,
+                method:'PUT',
+                dataType: 'json',
+                type:'put',
+            }).done(function (data) {
+                console.log(data);
+                
+                 if(data.message == "Data not updated"){
+                    console.log(data);
+                    var html='';
+                    if(data.error.book_name){html+=data.error.book_name+"<br>"}
+                    if(data.error.province_id){html+=data.error.province_id+"<br>"}
+                    if(data.error.book_type_id){html+=data.error.book_type_id+"<br>"}
+                    if(data.error.district_id){html+=data.error.district_id+"<br>"}
+                    if(data.error.volume_no){html+=data.error.volume_no+"<br>"}
+                    if(data.error.start_page_no){html+=data.error.start_page_no+"<br>"}
+                    if(data.error.start_page_no){html+=data.error.end_page_no+"<br>"}
+                    $("#error_update_div").html(html);
+                    $("#error_update_div").removeClass('d-none');
+                    return false;
+                }
+                $("#edit-book-modal").modal('hide');
+                $("#edit-book-modal").trigger('reset');
+                $("#sucDiv").html(data.message);
+                $("#sucDiv").removeClass('d-none');
+                console.log(data);
+                setTimeout(function() {
+                    refershPage();
+                   }, 1500);
+            }).fail(function ($xhr) {
+                          var data = $xhr.responseJSON;
+                          console.log($xhr);
+                          e.preventDefault();
+                          alert('Data could not be updated.');
+                        
+                      }); 
+        }
+    return false;
+ }); 
+    }
+{{--  
+        return false;
+        alert('hewllo');
+        e.preventDefault();
+        var modalEl = $(e.currentTarget);
+        if (!e.isDefaultPrevented()) {
+            var formData = $("form", modalEl).serialize();
             $.ajax({
                 headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                 data: formData,
@@ -198,7 +243,7 @@
                 dataType: 'json',
             }).done(function (data) {
                 console.log(data);
-                refershPage();
+                 refershPage();  
             }).fail(function () {
                 $(".spinner-border", modalEl).hide();
                 $("button[type='submit']", modalEl).prop('disabled', false);
@@ -206,7 +251,8 @@
             });
         }
         return false;
-    });
+    }); 
+     --}}
 
 
 

@@ -6,18 +6,26 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
         </div>
         <div class="modal-body">
-            <form >
+            <div id='error_update_div' class='alert alert-danger d-none'></div>
+            <form id='edit-book-form'>
                 {{ csrf_field() }}
                 <input type="hidden" name="id" value="{{ $id }}" />
-                <div class="form-group">
-                    <label class="control-label" for="title">Book Name</label>
-                    <input type="text" name="book_name" value="{{ $book->book_name }}" class="form-control" data-error="Please enter book name." required />
-                    <div class="help-block with-errors"></div>
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label class="control-label" for="title">Book Name</label>
+                        <input type="text" name="book_name" value="{{ $book->book_name }}" class="form-control" data-error="Please enter book name." required />
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label class="control-label" for="title">Book Keywords</label>
+                        <input type="text" name="keywords" value="{{ $book->keywords }}" class="form-control" data-error="Please enter book keywords." />
+                        <div class="help-block with-errors"></div>
+                    </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-3">
                         <label class="control-label" for="title">Book Type</label>
-                        <select class="form-control" name="book_type" data-error="Please enter description." required>
+                        <select class="form-control" name="book_type_id" data-error="Please enter description." required>
                             <option label="Select Option"></option>
                             @foreach($book_types as $book_type)
                                 @if ($book_type->id == $book->book_type_id)
@@ -31,7 +39,7 @@
                     </div>
                     <div class="form-group col-md-3">
                         <label class="control-label" for="title">Province</label>
-                        <select class="form-control" name="province" data-error="Please select province." required>
+                        <select class="form-control" name="province_id" data-error="Please select province." required>
                             <option label="Select Option"></option>
                             @foreach($provinces as $province)
                                 @if ($province->id == $book->province_id)
@@ -45,7 +53,7 @@
                     </div>
                     <div class="form-group col-md-3">
                         <label class="control-label" for="title">District</label>
-                        <select class="form-control" name="district" data-error="Please select district." >
+                        <select class="form-control" name="district_id" data-error="Please select district." >
                             <option label="Select Option"></option>
                             @foreach($districts as $district)
                                 @if ($district->id == $book->district_id)
@@ -81,8 +89,8 @@
                     </div>
 
                     <div class="form-group col-md-3">
-                        <label class="control-label" for="title">Entered Pages</label>
-                        <input type="text" name="entered_pages" value="{{ $book->entered_pages }}" class="form-control" data-error="Please enter value" required />
+                        <label class="control-label" for="title">Book Year</label>
+                        <input type="text" name="book_year" value="{{ $book->book_year }}" class="form-control" data-error="Please enter value" required />
                         <div class="help-block with-errors"></div>
                     </div>
                 </div>
@@ -111,7 +119,7 @@
                 
 
                 <div class="form-group">
-                    <button type="submit" class="btn crud-submit btn-success"><span class="spinner-border spinner-border-sm" style="display: none;" role="status" aria-hidden="true"></span> Submit</button>
+                    <button type="submit" class="btn btn-success" onclick="update_data({{ $book->id }});"> Submit</button>
                 </div>
             </form>
         </div>

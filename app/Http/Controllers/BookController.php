@@ -91,7 +91,7 @@ class BookController extends Controller
         $validator = Validator::make($request->all(),$rules);
         
         //
-        if ($validator->fails()) { 
+        if ($validator->fails()) {
             return Response::json([
                 'message'=>'Data not inserted',
                 'error' =>$validator->errors()->toArray()
@@ -99,10 +99,8 @@ class BookController extends Controller
         }else{
             $total_pages = ($request->end_page_no) - ($request->start_page_no);
         $request->request->add(['total_pages' => $total_pages]);
-
             try{
                 $book = Book::create($request->all());
-                
                 return Response::json([
                     'message'=>'Data inserted']); 
             }catch(QueryException $e){
@@ -155,7 +153,6 @@ class BookController extends Controller
         $provinces = Province::select(['id', 'name_' . App::getLocale() . ' as name'])->get();
         $districts = District::select(['id', 'name_' . App::getLocale() . ' as name'])->get();
         $book_types = BookType::select(['id', 'name_' . App::getLocale() . ' as name'])->get();
-
         return view('book.partials.edit', compact('book', 'provinces', 'districts', 'book_types', 'book_details', 'id'));
     }
 
@@ -168,27 +165,43 @@ class BookController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // return Response::json([$request->all()],200);
         if (!Auth::user()->hasPermissionTo('Edit Book')) {
             abort('401');
         }
+        $rules = array(
+            'book_name' => 'required',
+            'province_id' => 'required ',
+            'book_type_id' =>'required ',
+            'district_id' => 'required ',
+            'volume_no' => 'required ',
+            'start_page_no' => 'required ',
+            'end_page_no' => 'required ',
+            
+            'book_year' => 'required ',
+        );
 
-        $this->validate($request, [
-            'name' => 'bail|required|min:2',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'roles' => 'required|min:1'
-        ]);
-
-        // Get the book
-        $book = Book::findOrFail($id);
-
-        // Update book
-        $book->fill($request->except('user_id'));
-
-        $book->save();
-
-        flash()->success('Book has been updated.');
-
-        return redirect()->route('book.book_list');
+        $validator = Validator::make($request->all(),$rules);
+        if ($validator->fails()) {
+            return Response::json([
+                'message'=>'Data not updated',
+                'error' =>$validator->errors()->toArray()
+            ]);
+        }else{
+            $total_pages = ($request->end_page_no) - ($request->start_page_no);
+            $request->request->add(['total_pages' => $total_pages]);
+            try{  
+                // Get the book
+                $book = Book::findOrFail($id);
+                // Update book
+                $book->fill($request->all());
+                $book->save();
+                return Response::json(['message'=>'Data updated']); 
+            }catch(QueryException $e){
+                return $e.getMessage();
+            }
+            
+        }
     }
 
     /**
