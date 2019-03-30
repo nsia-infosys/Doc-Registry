@@ -84,10 +84,13 @@
                 </div>
             </div>
         </nav>
-
+        <div class="container" style="margin-top:5px">
+            <div id='sucDiv' class="alert alert-success d-none"></div>  <div id='errDiv' class="alert alert-danger d-none"></div>
+        </div>
         <main class="py-4">
             @yield('content')
         </main>
+        
     </div>
 </body>
 </html>

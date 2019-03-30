@@ -6,11 +6,19 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
         </div>
         <div class="modal-body">
+            <div class="errDiv alert alert-danger d-none"></div>
             <form >
-                <div class="form-group">
+                <div class='row'>
+                <div class="form-group col-md-6">
                     <label class="control-label" for="title">Book Name</label>
                     <input type="text" name="book_name" class="form-control" data-error="Please enter book name." required />
                     <div class="help-block with-errors"></div>
+                </div>
+                <div class="form-group col-md-6">
+                    <label class="control-label" for="title">Book Keywords</label>
+                    <input type="text" name="keywords" class="form-control" data-error="Please enter book keywords." />
+                    <div class="help-block with-errors"></div>
+                </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group col-md-3">
@@ -49,7 +57,7 @@
                         <div class="help-block with-errors"></div>
                     </div>    
                 </div>
-
+                
                 <div class="form-row">
                     <div class="form-group col-md-3">
                         <label class="control-label" for="title">Start Page No</label>
@@ -67,8 +75,8 @@
                     </div>
 
                     <div class="form-group col-md-3">
-                        <label class="control-label" for="title">Entered Pages</label>
-                        <input type="text" name="entered_pages" class="form-control" data-error="Please enter value" required />
+                        <label class="control-label" for="title">Book Year</label>
+                        <input type="text" name="book_year" class="form-control" data-error="Please enter value" required />
                         <div class="help-block with-errors"></div>
                     </div>
                 </div>
@@ -92,7 +100,7 @@
                 
 
                 <div class="form-group">
-                    <button type="submit" class="btn crud-submit btn-success"><span class="spinner-border spinner-border-sm" style="display: none;" role="status" aria-hidden="true"></span> Submit</button>
+                    <button type="submit" class="btn crud-submit btn-success">Submit</button>
                 </div>
             </form>
         </div>

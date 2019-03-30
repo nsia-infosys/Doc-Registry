@@ -35,7 +35,7 @@ class CreateBooksTable extends Migration
 
             $table->bigInteger('qc_by_id')->unsigned()->nullable();
             $table->foreign('qc_by_id')->references('id')->on('users');
-
+            
             $table->timestamp('qc_date')->nullable();
 
             $table->timestamps();

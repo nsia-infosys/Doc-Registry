@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="container">
+    
     <div class="row justify-content-center">
         <div class="col-12">
             <a href="javascript:void(0)" style="float: right;" class="btn btn-success mb-2" onclick="newRecord()" id="create-new-book"><span class="oi oi-plus"></span></a>
@@ -70,8 +71,8 @@
             type: "GET"
         }).done(function (data) {
             $(data).modal();
-            // $('#list-table').html(data);
-            // location.hash = page;
+             //$('#list-table').html(data);
+             //location.hash = page;
         }).fail(function () {
             alert('Data could not be loaded.');
         });
@@ -133,9 +134,10 @@
         var modalEl = $(e.currentTarget);
         if (!e.isDefaultPrevented()) {
             var formData = $("form", modalEl).serialize();
+           
 
-            $("button[type='submit']", modalEl).prop('disabled', true);
-            $(".spinner-border", modalEl).show();
+            {{--  $("button[type='submit']", modalEl).prop('disabled', true);  --}}
+            {{--  $(".spinner-border", modalEl).show();  --}}
             $.ajax({
                 headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
                 data: formData,
@@ -143,16 +145,40 @@
                 type: "POST",
                 dataType: 'json',
             }).done(function (data) {
+                
+                if(data.message == "Data not inserted"){
+                    console.log(data);
+                    var html='';
+                    
+                    if(data.error.book_name){html+=data.error.book_name+"<br>"}
+                    if(data.error.province_id){html+=data.error.province_id+"<br>"}
+                    if(data.error.book_type_id){html+=data.error.book_type_id+"<br>"}
+                    if(data.error.district_id){html+=data.error.district_id+"<br>"}
+                    if(data.error.volume_no){html+=data.error.volume_no+"<br>"}
+                    if(data.error.start_page_no){html+=data.error.start_page_no+"<br>"}
+                    $(".errDiv").html(html);
+                    $(".errDiv").removeClass('d-none');
+                    return false;
+                }
+                $("#create-book-modal").modal('hide');
+                $("#create-book-modal").trigger('reset');
+                $("#sucDiv").html(data.message);
+                $("#sucDiv").removeClass('d-none');
                 console.log(data);
-                //  refershPage(); 
+                setTimeout(function() {
+                    refershPage();
+                   }, 1500);
+                
+                //{{--  refershPage();   --}}
             }).fail(function ($xhr) {
-                $(".spinner-border", modalEl).hide();
-                $("button[type='submit']", modalEl).prop('disabled', false);
-                var data = $xhr.responseJSON;
-                console.log(data);
-                e.preventDefault();
-                alert('Data could not be save.');
-            });
+                         // {{--  $(".spinner-border", modalEl).hide();  --}}
+                          //{{--  $("button[type='submit']", modalEl).prop('disabled', false);  --}}
+                          var data = $xhr.responseJSON;
+                          console.log($xhr);
+                          e.preventDefault();
+                          alert('Data could not be saved.');
+                          {{--  refershPage();  --}}
+                      });
         }
         return false;
     });

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use Redirect;
+use Illuminate\Support\Facades\Input;
 use App\Models\Book;
 use App\Models\Page;
 use App\Models\Province;
@@ -12,6 +13,9 @@ use Validator;
 use Response;
 use QueryException;
 use Illuminate\Http\Request;
+use Session;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 use View;
 use App;
 
@@ -19,9 +23,11 @@ use Illuminate\Support\Facades\Auth;
 
 class BookController extends Controller
 {
+    
     public function __construct()
     {
         $this->middleware('auth');
+       
     }
     
     /**
@@ -65,10 +71,12 @@ class BookController extends Controller
     public function store(Request $request)
     {
         $request->request->add(['user_id' => Auth::user()->id]);
+
         
         if (!Auth::user()->hasPermissionTo('Create Book')) {
             abort('401');
         }
+
         $rules = array(
             'book_name' => 'required',
             'province_id' => 'required',
@@ -77,23 +85,33 @@ class BookController extends Controller
             'volume_no' => 'required',
             'start_page_no' => 'required',
             'end_page_no' => 'required',
-            'entered_pages' => 'required',
+            'book_year' => 'required',
         );
-        $validator = Validator::make($request->all(),$rules);
-        if($validator->fails()){
-            return $validator->errors();
-        }else{
-            return $request;
-            if ( $book = Book::create($request->except('user_id')) ) {
-        
-            $this->syncPermissions($request, $book);
-            flash('Book has been created.');
-        } else {
-            flash()->error('Unable to create Book.');
-        }
 
-        return redirect()->route('book.book_list');}
+        $validator = Validator::make($request->all(),$rules);
+        
+        //
+        if ($validator->fails()) { 
+            return Response::json([
+                'message'=>'Data not inserted',
+                'error' =>$validator->errors()->toArray()
+            ]);
+        }else{
+            $total_pages = ($request->end_page_no) - ($request->start_page_no);
+        $request->request->add(['total_pages' => $total_pages]);
+
+            try{
+                $book = Book::create($request->all());
+                
+                return Response::json([
+                    'message'=>'Data inserted']); 
+            }catch(QueryException $e){
+                dd($e.getMessage());
+            }
+            
+        }
     }
+    
 
     /**
      * Display the specified resource.
