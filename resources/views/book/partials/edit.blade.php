@@ -100,10 +100,11 @@
                     <div class="form-control">
                     @foreach($book_details as $book_detail)
                         <div class="form-check form-check-inline">
+                            {{ $book->book_detail_id }}
                             @if ($book_detail['key'] == $book->book_detail_id)
-                            <input class="form-check-input" checked name="book_details" type="checkbox" value="{{ $book_detail['key'] }}">
+                                <input class="form-check-input" checked name="book_details" type="checkbox" value="{{ $book_detail['key'] }}">
                             @else
-                            <input class="form-check-input" name="book_details" type="checkbox" value="{{ $book_detail['key'] }}">
+                                <input class="form-check-input" name="book_details" type="checkbox" value="{{ $book_detail['key'] }}">
                             @endif
                             
                             <label class="form-check-label">{{ $book_detail['value'] }}</label>

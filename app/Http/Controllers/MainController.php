@@ -26,7 +26,16 @@ class MainController extends Controller
         $books = Book::whereBetween('id', [$id - 10, $id + 10])->orderBy('id','asc')->get();
         return view('general.view', compact('books', 'id'));
     }
-
+    public function get_prev_books($id){
+        $books = Book::whereBetween('id', [$id - 10,$id])->orderBy('id','asc')->get();
+        return Response::json(['data'=>$books,'id'=>$id]);
+        // return $books;
+    }
+    
+    public function get_next_books($id){
+        $books = Book::whereBetween('id', [$id,$id+10])->orderBy('id','asc')->get();
+        return Response::json(['data'=>$books,'id'=>$id]);
+    }
     public function showPage($id)
     {
         $page = Page::find($id);

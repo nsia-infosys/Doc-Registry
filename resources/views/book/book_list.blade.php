@@ -85,6 +85,7 @@
             url : "{!! url('/books'); !!}/" + recordId + "/edit",
             type: "GET"
         }).done(function (data) {
+            console.log(data);
             $(data).modal();
             // $('#list-table').html(data);
             // location.hash = page;

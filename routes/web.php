@@ -33,5 +33,7 @@ Route::get('/main/list/{offset?}/{limit?}', 'MainController@listBooks');
 Route::get('/main/{bookId}/pages', 'MainController@getBookPages');
 Route::get('/main/page/{pageId}', 'MainController@showPage');
 Route::get('/main/{bookId?}', 'MainController@index');
+Route::get('/get_prev_books/{bookId?}', 'MainController@get_prev_books');
+Route::get('/get_next_books/{bookId?}', 'MainController@get_next_books');
 
 

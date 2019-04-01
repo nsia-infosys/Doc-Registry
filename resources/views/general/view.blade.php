@@ -3,22 +3,24 @@
 @section('content')
 <div class="container">
     <div class="row cols-container">
-        <div class="col-sm-6 books-column">
+        <div id='books' class="col-sm-6 books-column">
             <div class="card">
                 <div class="card-header text-center">
                     Books
                 </div>
-                <ul class="list-group list-group-flush" style="height: 75vh; overflow: scroll;">
-                    <li onclick="loadPrevBooks()" class="list-group-item text-center"><span class="oi oi-arrow-circle-top"></span></li>
-                    @foreach($books as $book)
-                        @if($book->id == $id)
-                            <li record-id="{{ $book->id }}" onclick="fetchPages({{ $book->id }})" class="list-group-item bg-info">{{ $book->id . ' - ' . $book->book_name . ' - ' . $book->volume_no}}</li>
-                        @else
-                            <li record-id="{{ $book->id }}" onclick="fetchPages({{ $book->id }})" class="list-group-item">{{ $book->id . ' - ' . $book->book_name . ' - ' . $book->volume_no}}</li>
-                        @endif
-                    @endforeach
-                    <li onclick="loadNextBooks()" class="list-group-item text-center"><span class="oi oi-arrow-circle-bottom"></span></li>
-                </ul>
+                <div id='ulList'>
+                    <ul id='prevBooksUl' class="list-group list-group-flush" style="height: 75vh; overflow: scroll;">
+                        <li id='prevBooks' onclick="loadPrevBooks(this.id)" class="list-group-item text-center"><span class="oi oi-arrow-circle-top"></span></li>
+                        @foreach($books as $book)
+                            @if($book->id == $id)
+                                <li record-id="{{ $book->id }}" onclick="fetchPages({{ $book->id }})" class="list-group-item bg-info">{{ $book->id . ' - ' . $book->book_name . ' - ' . $book->volume_no}}</li>
+                            @else
+                                <li record-id="{{ $book->id }}" onclick="fetchPages({{ $book->id }})" class="list-group-item">{{ $book->id . ' - ' . $book->book_name . ' - ' . $book->volume_no}}</li>
+                            @endif
+                        @endforeach
+                        <li id='nextBooks' onclick="loadNextBooks(this.id)" class="list-group-item text-center"><span class="oi oi-arrow-circle-bottom"></span></li>
+                    </ul>
+                </div>
             </div>
         </div>
         <div class="col-sm-6 pages-column">
@@ -56,13 +58,72 @@
 </div>
 
 <script>
-    function changeURL(url)
-    {
+    function loadPrevBooks(id){
+        console.log("loadPrevBooks: "+id);
+        var bookId = $("#"+ id).next('li').attr('record-id');
+        console.log("gotId: "+bookId);
+        
+        $.ajax({
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            url : "{!! url('/get_prev_books'); !!}" + "/"+bookId,
+            type: "GET",
+            method: "GET"
+        }).done(function (data) {
+            console.log(data);
+            var j = 0;
+            if(bookId>0){
+                {{-- $("#"+id).siblings().not('#nextBooks').remove(); --}}
+                    for(j;j<data.data.length;j++){
+                        console.log(data.data[j].id +" " +data.data[j].book_name+" "+data.data[j].volume_no);
+                            console.log(data.data[j].id);
+                            if(data.data[j].id != bookId){
+                                
+                            $("#"+id).before("<li record-id='"+data.data[j].id+"' onclick='fetchPages("+data.data[j].id+")' class='list-group-item'>"
+                                + data.data[j].id + " - " + data.data[j].book_name + " - " + data.data[j].volume_no + "</li>");
+                            }
+                    }
+                    $("#"+id).remove();
+                    
+                    $("<li id='prevBooks' onclick='loadPrevBooks(this.id)' class='list-group-item text-center'><span class='oi oi-arrow-circle-top'></span></li>").insertBefore($("#prevBooksUl li:nth-child(1)"));
+            }
+        }).fail(function () {
+            alert('not done');
+        });
+        }
+    function loadNextBooks(id){
+        console.log("loadNextBooks: "+id);
+        var bookId = $("#"+ id).prev('li').attr('record-id');
+        console.log("loadNextBooks: "+bookId);
+        $.ajax({
+            headers: { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') },
+            url : "{!! url('/get_next_books'); !!}" + "/"+bookId,
+            type: "GET",
+            method: "GET"
+        }).done(function (data) {
+            console.log(data +" done"); var j = 0;
+            if(bookId>0){
+                    for(j;j<data.data.length;j++){
+                        console.log(data.data[j].id +" " +data.data[j].book_name+" "+data.data[j].volume_no);
+                            console.log(data.data[j].id);
+                            if(data.data[j].id != bookId){
+                                $("#"+id).before("<li record-id='"+data.data[j].id+"' onclick='fetchPages("+data.data[j].id+")' class='list-group-item'>"
+                                    + data.data[j].id + " - " + data.data[j].book_name + " - " + data.data[j].volume_no + "</li>");
+                            }
+                    }
+                    $("#"+id).remove();
+$("<li id='nextBooks' onclick='loadNextBooks(this.id)' class='list-group-item text-center'><span class='oi oi-arrow-circle-bottom'></span></li>")
+.insertAfter($("#prevBooksUl li:last-child"));
+            }
+        }).fail(function () {
+            alert('not done');
+        });
+        }
+    
+    function changeURL(url){
         var new_url="/main/"+url;
         window.history.pushState("data","Title",new_url);
         document.title=url;
-    }
-
+        }
     function toggleWidth() {
         var detailsPage = $(".page-details-column");
         if($(detailsPage).hasClass("col-sm-12")) {
@@ -79,7 +140,6 @@
     function adjustColumns() {
         var colsContainerEl = $(".cols-container");
         var totalCols = $(".cols-container>div:visible").length;
-
         if(totalCols == 2) {
             $(".books-column").removeClass("col-sm-6 col-sm-0").addClass("col-sm-6");
             $(".pages-column").removeClass("col-sm-6 col-sm-0").addClass("col-sm-6");

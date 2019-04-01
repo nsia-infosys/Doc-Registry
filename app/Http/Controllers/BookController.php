@@ -153,6 +153,7 @@ class BookController extends Controller
         $provinces = Province::select(['id', 'name_' . App::getLocale() . ' as name'])->get();
         $districts = District::select(['id', 'name_' . App::getLocale() . ' as name'])->get();
         $book_types = BookType::select(['id', 'name_' . App::getLocale() . ' as name'])->get();
+        
         return view('book.partials.edit', compact('book', 'provinces', 'districts', 'book_types', 'book_details', 'id'));
     }
 
