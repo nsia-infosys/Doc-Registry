@@ -111,8 +111,8 @@
                             }
                     }
                     $("#"+id).remove();
-$("<li id='nextBooks' onclick='loadNextBooks(this.id)' class='list-group-item text-center'><span class='oi oi-arrow-circle-bottom'></span></li>")
-.insertAfter($("#prevBooksUl li:last-child"));
+                    $("<li id='nextBooks' onclick='loadNextBooks(this.id)' class='list-group-item text-center'><span class='oi oi-arrow-circle-bottom'></span></li>")
+                    .insertAfter($("#prevBooksUl li:last-child"));
             }
         }).fail(function () {
             alert('not done');
